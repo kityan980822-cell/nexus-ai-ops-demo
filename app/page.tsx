@@ -33,6 +33,16 @@ function Stat({ title, value, note, tone }: { title: string; value: string; note
   return <div className="stat-card"><div className="stat-top"><span>{title}</span><i className={tone || "indigo"}>↗</i></div><strong>{value}</strong><small>{note}</small></div>;
 }
 
+function RegionalBusinessSnapshot({go}:{go:(v:View)=>void}) {
+  const orders=[
+    {amount:"¥38,680",store:"徐汇港汇店",customer:"高价值亲子会员",staff:"陈可欣",product:"家庭护理套装×6",time:"昨日 19:26"},
+    {amount:"¥26,420",store:"浦东世纪汇店",customer:"企业礼赠顾客",staff:"赵子涵",product:"七夕礼盒×12",time:"昨日 16:08"},
+    {amount:"¥21,860",store:"虹桥天地店",customer:"重要保持会员",staff:"王雨桐",product:"高端护理组合×4",time:"昨日 14:35"},
+    {amount:"¥18,920",store:"静安大悦城店",customer:"商场会员新客",staff:"周晓薇",product:"清润系列×8",time:"昨日 12:18"}
+  ];
+  return <section className="regional-snapshot"><div className="regional-performance panel"><div className="panel-title"><div><b>华东区域经营表现</b><em>8月1日 · 对比全国7个区域</em></div><button onClick={()=>go("analysis")}>查看区域分析 →</button></div><div className="region-core"><div><small>本月区域销售</small><strong>¥12.86M</strong><span className="positive">同比 +8.4%</span><p>目标 ¥16.36M，当前完成78.6%</p></div><div className="region-rank"><span>全国区域排名</span><b>第 2 名</b><small>较上月上升1位</small><i><i style={{width:"86%"}}/></i><p>距第1名华南区域 ¥0.84M</p></div><div className="region-contribution"><span>销售贡献前三城市</span><div><b>上海</b><i><i style={{width:"82%"}}/></i><em>56%</em></div><div><b>杭州</b><i><i style={{width:"38%"}}/></i><em>24%</em></div><div><b>南京</b><i><i style={{width:"26%"}}/></i><em>13%</em></div></div></div><div className="regional-signals"><span><b>42家</b>经营门店</span><span><b>26家</b>完成阶段目标</span><span><b>11家</b>销售同比增长</span><span><b className="negative">7家</b>需要重点关注</span><span><b>¥1.48M</b>活动销售贡献</span></div></div><div className="panel big-orders"><div className="panel-title"><div><b>近期大单与所属门店</b><em>单笔金额≥¥15,000</em></div><button>查看全部12笔 →</button></div><div className="big-order-head"><span>金额 / 时间</span><span>所属门店</span><span>顾客类型</span><span>销售人员</span><span>商品内容</span></div>{orders.map(x=><div className="big-order-row" key={x.amount+x.store}><span><b>{x.amount}</b><small>{x.time}</small></span><b>{x.store}</b><span>{x.customer}</span><span>{x.staff}</span><span>{x.product}</span></div>)}<div className="order-ai-note"><span>✦</span><p><b>AI大单观察：</b>本周12笔大单中，7笔来自高价值老会员，3笔来自活动新客，2笔为企业礼赠。徐汇港汇店的大单复购更稳定；企业礼赠订单金额高，但需要单独观察后续复购，不能与个人会员直接比较。</p></div></div></section>;
+}
+
 function Overview({ go }: { go: (v: View) => void }) {
   return <>
     <section className="decision-hero">
@@ -57,6 +67,7 @@ function Overview({ go }: { go: (v: View) => void }) {
       </article>
     </section>
     <section className="panel loop-panel"><div className="panel-title"><div><b>行动闭环</b><em>任务完成不等于问题解决</em></div><button onClick={()=>go("customer")}>查看全部行动 →</button></div><div className="loop-flow"><div><span>3</span><b>待人工确认</b><small>AI分析与市场情报</small></div><i>→</i><div><span>2</span><b>加盟商协同</b><small>等待反馈与确认</small></div><i>→</i><div><span>11</span><b>门店执行中</b><small>整改、活动与培训</small></div><i>→</i><div><span>428</span><b>C端反馈</b><small>参与、购买与评价</small></div><i>→</i><div><span>6</span><b>等待结果验证</b><small>比较行动前后变化</small></div></div></section>
+    <RegionalBusinessSnapshot go={go}/>
   </>;
 }
 
