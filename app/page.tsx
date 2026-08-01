@@ -103,6 +103,7 @@ function Campaign() {
 
 function Franchisee() {
   const [selected,setSelected]=useState(0);
+  const [franchiseeQuery,setFranchiseeQuery]=useState("");
   const [feedbackOpen,setFeedbackOpen]=useState(true);
   const [historyOpen,setHistoryOpen]=useState(false);
   const fs=[
@@ -113,8 +114,12 @@ function Franchisee() {
     {name:"宁波汇新零售有限公司",contact:"孙启航",stores:5,status:"重点成长",sales:"+21.6%",tickets:0,last:"5天前",tags:["电商背景","30—35岁","跑步","直播资源","数据驱动"],signed:"2023.05.18",expires:"2028.05.17"},
     {name:"无锡嘉润商贸有限公司",contact:"刘建华",stores:1,status:"风险观察",sales:"-14.1%",tickets:4,last:"32天前",tags:["传统批发背景","50—55岁","书法","渠道资源","价格敏感"],signed:"2020.12.01",expires:"2026.11.30"}
   ];
+  const filteredFranchisees=fs.map((item,index)=>({item,index})).filter(({item})=>{
+    const keyword=franchiseeQuery.trim().toLowerCase();
+    return !keyword||[item.name,item.contact,...item.tags].join(" ").toLowerCase().includes(keyword);
+  });
   const f=fs[selected];
-  return <><div className="page-head row"><div><div className="eyebrow">FRANCHISEE SUCCESS</div><h1>加盟商经营</h1><p>通过行业、年龄、兴趣和资源等标签理解加盟商背景，再结合门店经营与服务记录提供维护建议。</p></div><button className="primary">＋ 新增加盟商资料</button></div><div className="franchise-layout"><section className="panel f-list"><div className="f-list-head"><div className="list-search">⌕ 搜索加盟商、联系人或标签</div><span>共36位加盟商</span></div><div className="tag-filter"><button className="active">全部</button><button>行业背景</button><button>资源背景</button><button>兴趣爱好</button></div>{fs.map((x,i)=><button className={selected===i?"active":""} onClick={()=>setSelected(i)} key={x.name}><span className="company-avatar">{x.name.slice(0,1)}</span><div><b>{x.name}</b><small>{x.contact} · {x.stores}家门店</small><span className="mini-tags">{x.tags.slice(0,2).map(t=><i key={t}>{t}</i>)}</span></div><em>{x.status}</em></button>)}</section>
+  return <><div className="page-head row"><div><div className="eyebrow">FRANCHISEE SUCCESS</div><h1>加盟商经营</h1><p>通过行业、年龄、兴趣和资源等标签理解加盟商背景，再结合门店经营与服务记录提供维护建议。</p></div><button className="primary">＋ 新增加盟商资料</button></div><div className="franchise-layout"><section className="panel f-list"><div className="f-list-head"><label className="list-search"><span>⌕</span><input value={franchiseeQuery} onChange={e=>setFranchiseeQuery(e.target.value)} placeholder="搜索公司、联系人或画像标签" aria-label="搜索加盟商"/>{franchiseeQuery&&<button onClick={()=>setFranchiseeQuery("")} aria-label="清空搜索">×</button>}</label><span>{franchiseeQuery?`找到 ${filteredFranchisees.length} 位匹配加盟商`:"共36位加盟商"}</span></div><div className="tag-filter"><button className="active">全部</button><button>行业背景</button><button>资源背景</button><button>兴趣爱好</button></div>{filteredFranchisees.map(({item:x,index:i})=><button className={selected===i?"active":""} onClick={()=>setSelected(i)} key={x.name}><span className="company-avatar">{x.name.slice(0,1)}</span><div><b>{x.name}</b><small>{x.contact} · {x.stores}家门店</small><span className="mini-tags">{x.tags.slice(0,2).map(t=><i key={t}>{t}</i>)}</span></div><em>{x.status}</em></button>)}{filteredFranchisees.length===0&&<div className="search-empty"><b>没有找到匹配的加盟商</b><small>可以尝试搜索“零售”“商场资源”或联系人姓名</small></div>}</section>
     <section className="f-detail"><div className="panel company-head"><div className="company-avatar big">启</div><div><div><h2>{f.name}</h2><em className="pill red">{f.status}</em></div><p>合作始于2022年 · 华东区域 · 负责人：林倩</p></div><button className="secondary">记录沟通</button></div>
       <div className="panel profile-card"><div className="profile-title"><div><b>加盟商画像标签</b><small>由人工录入和确认，AI不得自行写入事实标签</small></div><button>＋ 管理标签</button></div><div className="profile-tags">{f.tags.map((t,i)=><span className={`tag-c${i}`} key={t}>{t}</span>)}</div><div className="profile-facts"><div><small>行业经历</small><b>12年连锁零售与商场运营经验</b></div><div><small>资源背景</small><b>华东商业体与本地商会资源</b></div><div><small>主要诉求</small><b>稳定供货、活动支持、区域拓展</b></div><div><small>沟通偏好</small><b>先看数据依据，再讨论执行方案</b></div></div></div>
       <div className="contract-strip"><div><small>签约时间</small><b>{f.signed}</b></div><i>→</i><div><small>合同到期</small><b>{f.expires}</b></div><div className="contract-alert"><span>!</span><p><b>距到期约13个月</b><small>建议提前180天启动续约评估</small></p></div><button>查看合同摘要</button></div>
