@@ -5,16 +5,13 @@ import { useMemo, useState } from "react";
 type View = "overview" | "analysis" | "intel" | "campaign" | "franchisee" | "store" | "people" | "customer" | "tasks" | "knowledge";
 
 const menu: { id: View; label: string; icon: string }[] = [
-  { id: "overview", label: "经营工作台", icon: "⌂" },
-  { id: "analysis", label: "智能交叉分析", icon: "⌁" },
-  { id: "intel", label: "市场情报", icon: "◎" },
-  { id: "campaign", label: "活动中心", icon: "◇" },
-  { id: "franchisee", label: "加盟商中心", icon: "◫" },
-  { id: "store", label: "门店中心", icon: "□" },
-  { id: "people", label: "员工与培训", icon: "♙" },
-  { id: "customer", label: "消费者运营", icon: "○" },
-  { id: "tasks", label: "任务与工单", icon: "✓" },
-  { id: "knowledge", label: "企业知识库", icon: "▤" },
+  { id: "overview", label: "今日经营", icon: "⌂" },
+  { id: "analysis", label: "AI智能分析", icon: "⌁" },
+  { id: "intel", label: "市场机会", icon: "◎" },
+  { id: "campaign", label: "活动运营", icon: "◇" },
+  { id: "franchisee", label: "加盟商经营", icon: "◫" },
+  { id: "store", label: "门店运营", icon: "□" },
+  { id: "customer", label: "客户与服务", icon: "○" },
 ];
 
 const stores = [
@@ -38,22 +35,28 @@ function Stat({ title, value, note, tone }: { title: string; value: string; note
 
 function Overview({ go }: { go: (v: View) => void }) {
   return <>
-    <section className="hero-row">
-      <div><div className="eyebrow">2026年8月1日 · 华东区域</div><h1>早上好，运营负责人</h1><p>AI已完成今日经营扫描，发现 <b>3项需要关注</b> 的问题和 <b>2个市场机会</b>。</p></div>
-      <button className="primary" onClick={() => go("analysis")}>✦ 开始AI经营分析</button>
+    <section className="decision-hero">
+      <div className="decision-copy"><div className="eyebrow">TODAY'S OPERATING DECISION</div><h1>今天先处理什么，系统已经帮你排好了</h1><p>从经营数据和市场变化中发现问题与机会，结合企业知识给出行动建议，并持续追踪结果。</p><div className="scan-meta"><span>42家门店</span><span>36个加盟商</span><span>18条市场情报</span><span>12份企业文档</span></div></div>
+      <div className="decision-count"><div><b>3</b><span>重要经营问题</span></div><div><b>2</b><span>可利用市场机会</span></div><div><b>6</b><span>逾期行动</span></div></div>
+      <div className="ask-bar"><span>✦</span><input readOnly value="今天最应该优先处理什么？"/><button onClick={() => go("analysis")}>开始分析</button></div>
     </section>
-    <section className="stats"><Stat title="本月销售额" value="¥12.86M" note="同比 +8.4%"/><Stat title="目标达成率" value="78.6%" note="距月目标 ¥3.50M" tone="violet"/><Stat title="活跃会员" value="48,236" note="本月新增 2,148" tone="cyan"/><Stat title="待处理事项" value="23" note="其中逾期 6项" tone="orange"/></section>
-    <section className="grid-main">
-      <div className="panel ai-brief">
-        <div className="panel-title"><div><span className="spark">✦</span><b>AI今日经营简报</b><em>刚刚更新</em></div><button onClick={() => go("analysis")}>查看完整分析 →</button></div>
-        <div className="brief-highlight"><span>!</span><div><b>静安大悦城店需要优先关注</b><p>销售连续4周下降，交叉分析发现核心商品缺货、陈列重复扣分与活动执行逾期处于同一时间段。</p><div className="tags"><i>销售 -18.2%</i><i>缺货 5天</i><i>巡查 72分</i></div></div></div>
-        <div className="brief-list"><div><i className="dot amber"/>华东加盟商「上海启悦」有2个工单即将超时，建议今日回访。<button onClick={() => go("franchisee")}>查看</button></div><div><i className="dot green"/>本地亲子艺术节已核实，覆盖3家门店核心客群，可评估转入活动。<button onClick={() => go("intel")}>查看</button></div></div>
-      </div>
-      <div className="panel focus"><div className="panel-title"><b>今日行动清单</b><em>6项待处理</em></div>
-        {[["核实静安店缺货原因","商品 · 高优先级","10:30"],["回访加盟商上海启悦","加盟商 · 工单即将超时","14:00"],["确认亲子艺术节情报","市场情报 · 待人工确认","今天"],["审核七夕会员活动方案","活动 · 待审核","今天"]].map((x,i)=><div className="todo" key={x[0]}><span className={i<2?"hot":""}>{i+1}</span><div><b>{x[0]}</b><small>{x[1]}</small></div><time>{x[2]}</time></div>)}
-      </div>
+    <section className="mini-kpis"><span>本月销售额 <b>¥12.86M</b><i>同比 +8.4%</i></span><span>目标达成 <b>78.6%</b><i>差距 ¥3.50M</i></span><span>活跃会员 <b>48,236</b><i>新增 2,148</i></span><span>数据更新 <b>09:30</b><i>6个数据源</i></span></section>
+    <section className="story-grid">
+      <article className="priority-card">
+        <div className="story-label danger">首要经营问题</div><div className="story-head"><div><h2>静安大悦城店销售连续下降</h2><p>销售 × 库存 × 巡查 × 活动执行</p></div><strong>-18.2%</strong></div>
+        <div className="reason-chain"><div><span>销售</span><b>连续4周下降</b><small>主要集中在2个核心SKU</small></div><i>→</i><div><span>库存</span><b>缺货5天</b><small>区域同品类仍增长4.6%</small></div><i>＋</i><div><span>执行</span><b>陈列68分</b><small>物料任务逾期2天</small></div></div>
+        <div className="knowledge-proof"><span>▤</span><div><b>企业知识依据</b><p>《商品陈列手册》第3.2节要求核心活动商品保持主陈列面完整，并每日确认安全库存。</p></div></div>
+        <div className="ai-judgement"><b>AI判断</b><p>缺货与执行偏差在销售下降期间共同出现，建议优先核实；当前证据不足以认定单一原因或员工责任。</p></div>
+        <div className="story-actions"><button className="primary" onClick={()=>go("analysis")}>查看完整交叉分析</button><button className="secondary">创建改善行动</button></div>
+      </article>
+      <article className="opportunity-card">
+        <div className="story-label success">首要市场机会</div><div className="op-source"><span>已确认</span>上海文旅发布 · 2小时前</div><h2>上海西岸亲子艺术节</h2><p className="op-desc">目标客群与高价值会员高度重合，距离徐汇港汇店3.2公里，具备快速转化为门店活动的条件。</p>
+        <div className="match-score"><div><b>38%</b><span>目标会员重合度</span></div><div><b>3家</b><span>建议覆盖门店</span></div><div><b>10天</b><span>活动准备周期</span></div></div>
+        <div className="op-plan"><small>AI推荐方向</small><b>亲子共创体验＋会员礼遇</b><p>清润系列 · 家庭套装 · 社群邀约</p></div>
+        <button className="primary full" onClick={()=>go("intel")}>核实依据并生成活动</button>
+      </article>
     </section>
-    <section className="panel stores"><div className="panel-title"><div><b>门店经营表现</b><em>共 42 家门店</em></div><button onClick={() => go("store")}>全部门店 →</button></div><div className="store-table"><div className="tr head"><span>门店</span><span>本月销售额</span><span>环比变化</span><span>巡查评分</span><span>经营状态</span></div>{stores.map(s=><div className="tr" key={s.name}><span><i className="store-icon">店</i><b>{s.name}</b></span><span>{s.sales}</span><span className={s.change.startsWith("-")?"negative":"positive"}>{s.change}</span><span><i className="scorebar"><i style={{width:`${s.score}%`}}/></i>{s.score}</span><span><em className={`pill ${s.color}`}>{s.risk}</em></span></div>)}</div></section>
+    <section className="panel loop-panel"><div className="panel-title"><div><b>行动闭环</b><em>任务完成不等于问题解决</em></div><button onClick={()=>go("customer")}>查看全部行动 →</button></div><div className="loop-flow"><div><span>3</span><b>待人工确认</b><small>AI分析与市场情报</small></div><i>→</i><div><span>2</span><b>加盟商协同</b><small>等待反馈与确认</small></div><i>→</i><div><span>11</span><b>门店执行中</b><small>整改、活动与培训</small></div><i>→</i><div><span>428</span><b>C端反馈</b><small>参与、购买与评价</small></div><i>→</i><div><span>6</span><b>等待结果验证</b><small>比较行动前后变化</small></div></div></section>
   </>;
 }
 
@@ -105,7 +108,8 @@ function Franchisee() {
   return <><div className="page-head row"><div><div className="eyebrow">FRANCHISEE SUCCESS</div><h1>加盟商中心</h1><p>连接合作背景、门店经营、服务记录与市场变化，辅助总部精准维护。</p></div><button className="primary">＋ 新增加盟商资料</button></div><div className="franchise-layout"><section className="panel f-list"><div className="list-search">⌕ 搜索加盟商、联系人或门店</div>{fs.map((x,i)=><button className={selected===i?"active":""} onClick={()=>setSelected(i)} key={x.name}><span className="company-avatar">{x.name.slice(0,1)}</span><div><b>{x.name}</b><small>{x.contact} · {x.stores}家门店</small></div><em>{x.status}</em></button>)}</section>
     <section className="f-detail"><div className="panel company-head"><div className="company-avatar big">启</div><div><div><h2>{f.name}</h2><em className="pill red">{f.status}</em></div><p>合作始于2022年 · 华东区域 · 负责人：林倩</p></div><button className="secondary">记录沟通</button></div>
       <div className="f-stats"><div><small>关联门店</small><b>{f.stores}家</b></div><div><small>本月销售变化</small><b className={f.sales.startsWith("-")?"negative":"positive"}>{f.sales}</b></div><div><small>未结工单</small><b>{f.tickets}项</b></div><div><small>最近正式联系</small><b>{f.last}</b></div></div>
-      <div className="panel ai-maintain"><div className="panel-title"><div><span className="spark">✦</span><b>AI加盟商维护建议</b></div><em>数据更新于今天 09:30</em></div><div className="maintain-summary"><b>建议本周优先回访</b><p>关联门店销售下降与商品缺货、活动支持不足处于同一时间段；2个服务工单即将超时，且距离上次正式回访已25天。</p></div><div className="maintain-columns"><div><b>已确认事实</b><ul><li>3家门店中2家销售连续下降</li><li>2个工单超过预期处理时长</li><li>上次沟通提出商品与培训支持</li></ul></div><div><b>建议沟通重点</b><ul><li>先说明未结工单处理进度</li><li>核实商品缺货的实际影响</li><li>确认下一阶段活动支持需求</li></ul></div></div><div className="talk-script"><small>建议沟通话术</small><p>“周总，我们复盘了近期三家门店的经营和服务记录，注意到库存与两个未结事项可能影响近期经营。想先听听您当地的实际情况，再逐项确认总部可以提供的支持和完成时间。”</p></div><div className="guardrail"><b>待人工确认</b><p>尚无最新满意度记录；销售变化也可能受到商圈客流影响。AI不对加盟商合作态度或经营责任作自动判断。</p></div><div className="action-row"><button className="primary">创建维护任务</button><button className="secondary">生成回访提纲</button><button className="secondary">查看引用依据</button></div></div>
+      <div className="panel partner-voice"><div className="panel-title"><div><b>加盟商反馈与异议</b><em>人工补充 · 7月31日</em></div><button>＋ 记录反馈</button></div><div><span>周先生</span><p>“静安店近期受商场楼层施工影响，午间客流明显减少。库存问题确实存在，但销售下降不能只归因于门店执行，希望总部协助核实商场客流并协调到货。”</p><em>该反馈将作为下一次AI分析的人工证据，不自动覆盖原始数据。</em></div></div>
+      <div className="panel ai-maintain"><div className="panel-title"><div><span className="spark">✦</span><b>AI加盟商维护建议</b></div><em>已纳入加盟商反馈 · 09:30</em></div><div className="maintain-summary"><b>建议本周优先回访</b><p>关联门店销售下降与商品缺货、活动支持不足处于同一时间段；2个服务工单即将超时，且距离上次正式回访已25天。</p></div><div className="maintain-columns"><div><b>已确认事实</b><ul><li>3家门店中2家销售连续下降</li><li>2个工单超过预期处理时长</li><li>加盟商补充商场施工影响客流</li></ul></div><div><b>建议沟通重点</b><ul><li>先说明未结工单处理进度</li><li>联合核实商品与商场客流影响</li><li>确认下一阶段活动支持需求</li></ul></div></div><div className="talk-script"><small>建议沟通话术</small><p>“周总，我们已将您反馈的商场施工情况纳入复盘。此次希望和您一起核实客流、库存与活动执行三方面影响，再逐项确认总部可提供的支持和完成时间。”</p></div><div className="guardrail"><b>待人工确认</b><p>商场施工对客流的影响尚待数据核实。AI不对加盟商合作态度或经营责任作自动判断。</p></div><div className="action-row"><button className="primary">创建维护任务</button><button className="secondary">生成回访提纲</button><button className="secondary">查看引用依据</button></div></div>
     </section></div></>;
 }
 
@@ -122,7 +126,10 @@ function Generic({view}:{view:View}) {
 
 export default function Home() {
   const [view,setView]=useState<View>("overview");
+  const [securityOpen,setSecurityOpen]=useState(false);
   const title=useMemo(()=>menu.find(x=>x.id===view)?.label||"经营工作台",[view]);
-  return <div className="app-shell"><aside className="sidebar"><div className="brand"><span>NE</span><div><b>NEXUS AI</b><small>智能运营中台</small></div></div><nav>{menu.map(m=><button key={m.id} className={view===m.id?"active":""} onClick={()=>setView(m.id)}><i>{m.icon}</i>{m.label}{m.id==="tasks"&&<em>6</em>}</button>)}</nav><div className="sidebar-foot"><div className="system"><i className="online"/><span><b>数据连接正常</b><small>最近同步 09:30</small></span></div><div className="profile"><span>林</span><div><b>林倩</b><small>总部运营负责人</small></div><i>⋮</i></div></div></aside>
-    <main><header><div className="breadcrumb">AI智能运营中台 <span>/</span> {title}</div><div className="header-actions"><button title="全局搜索">⌕</button><button title="通知">♢<i className="notice"/></button><button className="ai-entry" onClick={()=>setView("analysis")}>✦ AI运营助手</button></div></header><div className="content">{view==="overview"&&<Overview go={setView}/>} {view==="analysis"&&<Analysis/>} {view==="intel"&&<Intel go={setView}/>} {view==="campaign"&&<Campaign/>} {view==="franchisee"&&<Franchisee/>} {["store","people","customer","tasks","knowledge"].includes(view)&&<Generic view={view}/>}</div></main></div>;
+  return <div className="app-shell"><aside className="sidebar"><div className="brand"><span>NE</span><div><b>NEXUS AI</b><small>智能运营中台</small></div></div><nav>{menu.map(m=><button key={m.id} className={view===m.id?"active":""} onClick={()=>setView(m.id)}><i>{m.icon}</i>{m.label}</button>)}</nav><div className="nav-sub"><small>系统能力</small><button onClick={()=>setView("knowledge")}><i>▤</i>企业知识库</button><button onClick={()=>setSecurityOpen(true)}><i>⌾</i>数据与权限</button></div><div className="sidebar-foot"><div className="system"><i className="online"/><span><b>数据连接正常</b><small>最近同步 09:30</small></span></div><div className="profile"><span>林</span><div><b>林倩</b><small>总部运营负责人</small></div><i>⌄</i></div></div></aside>
+    <main><header><div className="breadcrumb">AI智能运营中台 <span>/</span> {title}</div><div className="header-actions"><button className="role-chip"><span>总部运营负责人</span><small>华东区域</small><i>⌄</i></button><button className="safe-chip" onClick={()=>setSecurityOpen(true)}>✓ 已脱敏 · 6个数据源</button><button title="通知">♢<i className="notice"/></button><button className="ai-entry" onClick={()=>setView("analysis")}>✦ 问AI</button></div></header><div className="content">{view==="overview"&&<Overview go={setView}/>} {view==="analysis"&&<Analysis/>} {view==="intel"&&<Intel go={setView}/>} {view==="campaign"&&<Campaign/>} {view==="franchisee"&&<Franchisee/>} {["store","people","customer","tasks","knowledge"].includes(view)&&<Generic view={view}/>}</div></main>
+    {securityOpen&&<div className="drawer-backdrop" onClick={()=>setSecurityOpen(false)}><aside className="security-drawer" onClick={e=>e.stopPropagation()}><div className="drawer-head"><div><div className="eyebrow">DATA SAFETY</div><h2>本次数据范围与脱敏</h2></div><button onClick={()=>setSecurityOpen(false)}>×</button></div><div className="safe-banner"><span>✓</span><div><b>数据已完成权限过滤与脱敏</b><p>无权限数据不会进入AI分析上下文。</p></div></div><h3>当前访问身份</h3><div className="safe-grid"><div><small>角色</small><b>总部运营负责人</b></div><div><small>组织范围</small><b>华东区域</b></div><div><small>可访问门店</small><b>42家</b></div><div><small>数据更新</small><b>08-01 09:30</b></div></div><h3>敏感数据处理</h3>{[["C端顾客","姓名匿名化、手机号脱敏、详细地址不进入AI"],["加盟商","联系人脱敏；合同金额与回款未纳入本次分析"],["员工","仅展示授权范围；小样本自动隐藏个人明细"],["企业文档","仅检索允许AI使用且当前角色有权查看的文档"]].map(x=><div className="safe-row" key={x[0]}><span>✓</span><div><b>{x[0]}</b><p>{x[1]}</p></div></div>)}<h3>AI本次可用范围</h3><div className="scope-tags"><span>销售</span><span>库存</span><span>巡查</span><span>活动</span><span>脱敏会员</span><span>内部运营文档</span></div><div className="excluded"><b>未纳入AI分析</b><p>完整手机号、身份证、详细地址、合同金额、个人证件、禁止AI处理的机密文档。</p></div></aside></div>}
+  </div>;
 }
