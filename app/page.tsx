@@ -76,7 +76,7 @@ function Analysis() {
     </div></section><aside className="evidence"><div className="evidence-head"><b>分析证据</b><em>5项引用</em></div>{evidence.map(e=><div className="evidence-item" key={e[0]}><span>✓</span><div><b>{e[0]}</b><p>{e[1]}</p><small>{e[2]}</small></div></div>)}<div className="scope"><b>本次分析范围</b><p>对象：静安大悦城店</p><p>周期：2026.07.01—07.31</p><p>比较：华东同类型门店</p></div></aside></div>;
 }
 
-function Intel({ go }: {go:(v:View)=>void}) {
+function LegacyIntel({ go }: {go:(v:View)=>void}) {
   const [status,setStatus]=useState("全部情报");
   const news=[
     {type:"本地事件",title:"上海西岸亲子艺术节8月中旬开幕",source:"上海文旅发布",time:"2小时前",state:"已确认",rel:"高",desc:"预计覆盖亲子家庭与年轻女性客群，距徐汇港汇店3.2公里。"},
@@ -89,6 +89,22 @@ function Intel({ go }: {go:(v:View)=>void}) {
     <div className="intel-grid"><section className="news-list">{news.filter(n=>status==="全部情报"||n.state===status).map((n,i)=><article className="news" key={n.title}><div className="news-top"><em>{n.type}</em><span className={`state s${i}`}>{n.state}</span><small>{n.time}</small></div><h3>{n.title}</h3><p>{n.desc}</p><div className="news-bottom"><span>来源：{n.source}</span><b>品牌关联度：{n.rel}</b><button onClick={()=>go("campaign")}>{n.state==="已确认"?"转入活动中心 →":"查看并核实 →"}</button></div></article>)}</section>
       <aside className="intel-ai"><div className="ai-icon">✦</div><b>AI机会扫描</b><p>基于今日18条情报、会员客群和门店数据，发现一个值得优先评估的机会。</p><div className="opportunity"><em>推荐机会</em><h3>亲子艺术节联动活动</h3><p>目标客群与品牌高价值会员重合度约 <b>38%</b>，徐汇、静安、浦东3家门店具备覆盖优势。</p><ul><li>建议活动：亲子体验＋会员礼遇</li><li>适合商品：清润系列、家庭套装</li><li>准备周期：约10天</li></ul><button className="primary" onClick={()=>go("campaign")}>查看活动建议</button></div><small>情报机会必须经人工核实后才能进入活动中心。</small></aside></div>
   </>;
+}
+
+function Intel({ go }: {go:(v:View)=>void}) {
+  const [selected,setSelected]=useState(0);
+  const [status,setStatus]=useState("全部机会");
+  const opportunities=[
+    {type:"本地活动",state:"已确认",time:"2小时前",title:"上海西岸亲子艺术节 8月中旬开幕",source:"上海文旅发布",area:"徐汇滨江",match:92,customers:"亲子家庭、高价值会员",stores:"徐汇港汇店等3家",marketing:"会员定向邀约＋亲子内容传播",format:"艺术共创体验＋会员专属礼遇",case:"2025杭州亲子艺术季联动活动",result:"到店家庭数提升31%，亲子套装转化率提升18%"},
+    {type:"商圈活动",state:"部分确认",time:"5小时前",title:"静安大悦城启动夏日会员消费季",source:"商场官方公众号",area:"静安商圈",match:86,customers:"商场活跃会员、年轻女性",stores:"静安大悦城店",marketing:"商场积分联动＋会员权益互换",format:"满额赠礼＋晚间快闪体验",case:"南京德基会员积分联动案例",result:"活动期新会员增长22%，连带率提升0.3"},
+    {type:"展览演出",state:"已确认",time:"今天 09:10",title:"城市香氛与生活方式展即将开展",source:"主办方官网",area:"浦东世博",match:81,customers:"品质生活、香氛兴趣人群",stores:"浦东世纪汇店等2家",marketing:"主题内容种草＋展会人群承接",format:"香氛体验沙龙＋展后到店礼",case:"深圳设计周生活方式体验活动",result:"内容互动率提升46%，活动后7日到店286人"},
+    {type:"本地赛事",state:"待确认",time:"昨天",title:"滨江夜跑系列赛拟开放品牌合作",source:"用户上传招商截图",area:"徐汇滨江",match:74,customers:"运动人群、年轻白领",stores:"徐汇港汇店",marketing:"社群招募＋运动场景内容",format:"夜跑补给站＋赛后护理体验",case:"成都女子跑社群联动案例",result:"招募到店率38%，运动人群新客占比61%"},
+    {type:"节日节点",state:"已确认",time:"今天 08:00",title:"七夕与周末客流高峰重合",source:"营销日历＋历史客流",area:"华东区域",match:70,customers:"情侣、礼赠需求会员",stores:"12家重点门店",marketing:"礼赠场景触达＋导购一对一邀约",format:"双人体验＋限定礼盒陈列",case:"2025七夕会员礼赠活动",result:"礼盒销售占比提升14%，邀约转化率19%"},
+    {type:"天气变化",state:"已确认",time:"1小时前",title:"周末持续高温，午间到店客流可能下降",source:"上海气象服务",area:"上海全域",match:65,customers:"周末到店顾客、社群会员",stores:"上海18家门店",marketing:"晚间时段触达＋清凉主题内容",format:"夜间会员专场＋到店清凉礼",case:"2024高温周末夜场调整案例",result:"晚间客流弥补午间下降的67%"}
+  ];
+  const visible=opportunities.filter(x=>status==="全部机会"||x.state===status);
+  const current=opportunities[selected];
+  return <><div className="page-head row"><div><div className="eyebrow">MARKET OPPORTUNITY RADAR</div><h1>市场机会</h1><p>持续抓取本地活动、赛事、展览、商圈和营销节点，再结合企业经营数据判断如何利用。</p></div><button className="primary">＋ 添加网页、截图或资料</button></div><section className="market-scan-top"><div className="scan-overview"><div className="scan-icon">✦</div><div><span>AI市场机会总扫描</span><h2>今日从 38 条外部信息中识别出 6 个值得分析的活动机会</h2><p>亲子家庭、商场会员和品质生活人群与当前重点顾客重合度较高；其中2个机会准备周期不足10天，建议优先完成真实性与合作条件核实。</p></div></div><div className="scan-numbers"><div><b>38</b><span>已抓取信息</span></div><div><b>6</b><span>推荐分析</span></div><div><b>3</b><span>高匹配机会</span></div><div><b>2</b><span>待人工核实</span></div></div><div className="scan-sources"><span>扫描范围</span><i>本地活动 12</i><i>商圈动态 8</i><i>赛事展览 7</i><i>节日节点 6</i><i>天气及其他 5</i><small>最近更新 10:20</small></div></section><section className="selected-opportunity panel"><div className="selected-head"><div><span>当前AI分析</span><h2>{current.title}</h2><p>{current.source} · {current.area} · 品牌匹配度 {current.match}%</p></div><button onClick={()=>go("campaign")}>转入活动方案 →</button></div><div className="recommend-grid"><div><small>推荐营销方式</small><b>{current.marketing}</b><p>结合目标顾客画像、门店覆盖范围和现有会员触达能力生成。</p></div><div><small>推荐活动方式</small><b>{current.format}</b><p>活动形式仍需结合预算、场地和合作条件由人工确认。</p></div><div className="reference-campaign"><small>参考营销活动</small><b>{current.case}</b><p>{current.result}</p><button>查看完整案例</button></div></div><div className="analysis-basis"><span>分析结合</span><i>目标顾客：{current.customers}</i><i>建议门店：{current.stores}</i><i>商品与库存</i><i>历史活动效果</i><em>外部活动真实性仍需人工确认</em></div></section><div className="opportunity-toolbar"><div>{["全部机会","已确认","部分确认","待确认"].map(x=><button className={status===x?"active":""} onClick={()=>setStatus(x)} key={x}>{x}</button>)}</div><span>当前展示 {visible.length} 个活动机会</span><button>筛选区域与类型 ⌄</button></div><section className="opportunity-list">{visible.map((item)=>{const index=opportunities.indexOf(item);return <article className={selected===index?"opportunity-item active":"opportunity-item"} key={item.title}><div className="op-item-top"><span>{item.type}</span><em className={item.state==="已确认"?"verified":"pending"}>{item.state}</em><small>{item.time}</small></div><h3>{item.title}</h3><p>{item.source} · {item.area}</p><div className="op-item-meta"><span>品牌匹配度 <b>{item.match}%</b></span><span>目标顾客 <b>{item.customers}</b></span></div><div className="op-item-bottom"><small>搜索信息不会直接视为可用活动机会</small><button onClick={()=>setSelected(index)}>AI分析建议 →</button></div></article>})}</section></>;
 }
 
 function Campaign() {
